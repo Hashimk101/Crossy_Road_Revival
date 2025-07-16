@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+*.log
+
+# Virtual environment
+venv/
+env/
+ENV/
+.VENV/
+.venv/
+
+# Pipenv, Poetry, etc.
+Pipfile.lock
+poetry.lock
+
+# --- Bytecode and caches ---
+*.pyc
+*.pyo
+*.pyd
+*.pyc.*
+
+# --- Jupyter Notebooks ---
+.ipynb_checkpoints
+
+# --- IDE & Editor folders ---
+.vscode/
+.idea/
+*.code-workspace
+
+# --- Visual Studio (Python or C++) ---
+.vs/
+*.user
+*.suo
+*.VC.db
+*.VC.opendb
+*.cache
+*.db
+
+# --- Build folders ---
+build/
+dist/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.idb
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
