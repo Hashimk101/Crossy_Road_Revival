@@ -7,6 +7,7 @@ class Player:
     def __init__(self):
         self.x = STARTINGX
         self.y = STARTINGY
+        self.offset_y = 0
         self.width = 101
         self.height = 60
         self.num_of_frames = 4
@@ -101,10 +102,9 @@ class Player:
             dict_of_keys = pygame.key.get_pressed()
             if dict_of_keys[pygame.K_UP]:
                 new_y = self.y - self.row_height
-                if new_y >= self.top_boundary:
-                    self.isKeyPressed = True
-                    self.direction = 'forward'
-                    self.target_y = new_y
+                self.isKeyPressed = True
+                self.direction = 'forward'
+                self.target_y = new_y
                 
             elif dict_of_keys[pygame.K_DOWN]:
                 new_y = self.y + self.row_height
@@ -151,4 +151,3 @@ class Player:
 
 
     
-    def CollisionDetection(self, sprite_list):
