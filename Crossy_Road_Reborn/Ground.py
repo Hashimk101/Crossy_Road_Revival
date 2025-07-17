@@ -172,6 +172,8 @@ def create_ground_sprite():
 def create_background(ground_rows, road_sprite, tiles_sprite):
     '''
         creates a 8 row ground sprite group
+        for a small grid like this, recreating the whole sprite group again
+        and again shouldnt be that problematic ig
     '''
     sprite_group = pygame.sprite.Group()
     
