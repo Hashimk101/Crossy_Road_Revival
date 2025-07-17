@@ -24,6 +24,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Crossy_Road_Reborn.py" />
+    <Compile Include="Game_Clock.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Ground.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="player.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.12" />
