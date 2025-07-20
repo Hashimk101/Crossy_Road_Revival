@@ -1,3 +1,4 @@
+from pickle import TRUE
 import pygame
 import random
 import time
@@ -154,6 +155,19 @@ def move_ground(sprite_group, dt, move_speed):
     for sprite in sprite_group:
         sprite.rect.y += move_speed * dt
 
+
+def checkCollisionWithPlayer(player, coin_group):
+
+    hasCollided = False
+
+    set_of_collided = pygame.sprite.spritecollide(player, coin_group, False)
+    for coin in set_of_collided:
+        if coin.collect():
+            hasCollided = True
+            coin_group.remove(coin)  # Remove coin from group after collection
+
+
+    return hasCollided
 
 # Example usage:
 if __name__ == "__main__":

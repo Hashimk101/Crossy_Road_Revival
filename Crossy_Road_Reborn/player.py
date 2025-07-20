@@ -1,4 +1,4 @@
-import pygame
+﻿import pygame
 
 # Constants
 STARTING_X, STARTING_Y = 400, 523
@@ -13,8 +13,9 @@ FRAME_DURATION = 0.10  # Each frame shows for 0.12 seconds
 MOVEMENT_DISTANCE = 100  # Player moves 100px per grid step
 
 
-class Player:
+class Player(pygame.sprite.Sprite):
     def __init__(self):
+        super().__init__()
         # Position and movement
         self.x = STARTING_X
         self.y = STARTING_Y
@@ -55,6 +56,12 @@ class Player:
         
         # Load and prepare sprites
         self._load_sprites()
+
+        # Define image and rect for collision support
+        self.image = self._get_current_frame()
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)
+
 
     def _load_sprites(self):
         """Load sprite sheets and create animation frames."""
@@ -171,38 +178,71 @@ class Player:
             return True
         return False
 
-    def handle_input(self):
+    def handle_input(self, object_group1, object_group2):
         """Process keyboard input for movement."""
         if self.is_animating:
             return
-
+        to_right = False
+        to_left = False
+        to_up = False   
+        to_bellow = False
+    
+        # Check both object groups
+        for object_group in [object_group1, object_group2]:
+            for obj in object_group:
+                # Only check objects within screen bounds + small buffer
+                if (-100 <= obj.rect.x <= 800) and (-100 <= obj.rect.y <= 600):
+                    # Check right (within ±50px of 100px to the right and ±50px same row)
+                    if (50 <= (obj.rect.x - self.x) <= 150 and 
+                        abs(obj.rect.y - self.y) <= 50):
+                        to_right = True
+                    # Check left (within ±50px of 100px to the left and ±50px same row)
+                    elif (50 <= (self.x - obj.rect.x) <= 150 and 
+                          abs(obj.rect.y - self.y) <= 50):
+                        to_left = True
+                    # Check up (within ±50px of 100px above and ±50px same column)
+                    elif (50 <= (self.y - obj.rect.y) <= 150 and 
+                          abs(obj.rect.x - self.x) <= 50):
+                        to_up = True
+                    # Check below (within ±50px of 100px below and ±50px same column)
+                    elif (50 <= (obj.rect.y - self.y) <= 150 and 
+                          abs(obj.rect.x - self.x) <= 50):
+                        to_bellow = True
+    
+        if to_up or to_right or to_left or to_bellow:
+            print('collision detected')
+    
         keys = pygame.key.get_pressed()
-        
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] and not to_up:
             self._start_movement('forward', 
                                self.x, self.y - self.row_height,
                                0, -self.base_velocity)
-                               
-        elif keys[pygame.K_DOWN]:
+                       
+        elif keys[pygame.K_DOWN] and not to_bellow:
             self._start_movement('backward',
                                self.x, self.y + self.row_height,
                                0, self.base_velocity)
-                               
-        elif keys[pygame.K_RIGHT]:
+                       
+        elif keys[pygame.K_RIGHT] and not to_right:
             self._start_movement('Right_Side',
                                self.x + self.column_width, self.y,
                                self.base_velocity, 0)
-                               
-        elif keys[pygame.K_LEFT]:
+                       
+        elif keys[pygame.K_LEFT] and not to_left:
             self._start_movement('Left_Side',
                                self.x - self.column_width, self.y,
                                -self.base_velocity, 0)
 
-    def update(self, dt):
+    def update(self, dt, object_group1, object_group2):
         """Update player state - call this every frame."""
-        self.handle_input()
+        self.handle_input(object_group1, object_group2)
         self._update_animation(dt)
         self._update_movement(dt)
+
+        # Sync the rect position to enable collision detection
+        self.image = self._get_current_frame()
+        self.rect.topleft = (self.x, self.y)
+
 
     def draw(self, screen):
         """Draw the player sprite to the screen."""
@@ -214,5 +254,5 @@ class Player:
         return not self.is_animating
 
     def move_down_const(self, move_speed,dt):
-        self.y += (move_speed + 10) *dt
-        self.target_y += (move_speed + 10) *dt
+        self.y += (move_speed + 28) *dt
+        self.target_y += (move_speed + 28) *dt

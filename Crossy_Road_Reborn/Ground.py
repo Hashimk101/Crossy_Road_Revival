@@ -1,5 +1,4 @@
 ﻿import random
-from ssl import OP_ENABLE_KTLS
 import pygame
 from pygame import sprite
 

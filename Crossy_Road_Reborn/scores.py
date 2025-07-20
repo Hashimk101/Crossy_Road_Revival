@@ -6,7 +6,7 @@ class Scores:
         self.scores = 0
         self.stop = False
         self.current_animation = 0
-        self.animation_time = 0.4
+        self.animation_time = 1.5
 
     def add_score(self, points):
         self.scores += points
@@ -21,6 +21,9 @@ class Scores:
         else:
             self.current_animation = 0
             self.scores += 1
+
+    def getScore(self):
+        return self.scores
 
     def reset_score(self):
         self.scores = 0

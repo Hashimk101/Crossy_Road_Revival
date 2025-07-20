@@ -3,11 +3,12 @@ import sys
 import player
 import Ground
 import Coins
+import scores
 
 # Screen setup
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 600
 FPS = 60
-MOVESPEED = 50
+MOVESPEED = 32
 
 # Grid constants
 GRID_ROWS = 6
@@ -44,6 +45,13 @@ obj_list = Ground.make_objects()
 objects_group2 = Ground.create_sprite_grid(obj_list, tree_sprite, bush_sprite,-1000)
 
 coins = Coins.create_coin_sprites(800, 600, 100, 10, y_offset=-500)
+
+scores_system = scores.Scores()
+
+for obj in objects_group1:
+        print(obj.rect.x, obj.rect.y)
+for obj in objects_group2:
+        print(obj.rect.x, obj.rect.y)
 
 def draw_grid(surface):
     """Draw grid lines on the screen."""
@@ -92,6 +100,13 @@ while isGameRunning:
     coins.update()
     coins.draw(screen)
     Coins.move_ground(coins, dt, MOVESPEED)
+
+    # print(f"score: {scores_system.getScore()}")
+    # check collision between player and coins
+    if Coins.checkCollisionWithPlayer(curr_player, coins):
+        scores_system.add_score(5)
+    scores_system.add_constant_score(dt)
+    
     
     # Check if topmost coin has moved below screen and recreate coins if needed
     topmost_coin_y = get_topmost_coin_y(coins)
@@ -99,7 +114,7 @@ while isGameRunning:
         # Clear existing coins
         coins.empty()
         # Create new coins starting at -500px
-        coins = Coins.create_coin_sprites(SCREEN_WIDTH, SCREEN_HEIGHT, 100, 3, y_offset=-500)
+        coins = Coins.create_coin_sprites(SCREEN_WIDTH, SCREEN_HEIGHT, 100, 3, y_offset=-600)
     
     # Check if either the first or last sprite in group1 is within the extended range
     if (objects_group1.sprites() and 
@@ -113,7 +128,7 @@ while isGameRunning:
         objects_group2.draw(screen)
     
     # Update and draw player
-    curr_player.update(dt)
+    curr_player.update(dt, objects_group1, objects_group2)
     curr_player.draw(screen)
     
     # Update display
