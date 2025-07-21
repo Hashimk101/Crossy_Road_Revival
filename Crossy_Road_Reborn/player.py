@@ -209,8 +209,8 @@ class Player(pygame.sprite.Sprite):
                           abs(obj.rect.x - self.x) <= 50):
                         to_bellow = True
     
-        if to_up or to_right or to_left or to_bellow:
-            print('collision detected')
+        # if to_up or to_right or to_left or to_bellow:
+        #     print('collision detected')
     
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP] and not to_up:

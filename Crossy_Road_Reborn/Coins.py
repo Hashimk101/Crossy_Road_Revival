@@ -14,7 +14,7 @@ class COINS(pygame.sprite.Sprite):
         self.active = True  # Bool to turn coin on/off
         
         # Load and setup sprite sheet
-        self.sprite_sheet = pygame.image.load("../sprites/rings.png").convert_alpha()
+        self.sprite_sheet = pygame.image.load("../sprites/rings1.png").convert_alpha()
         self.numframes = 4
         self.curr_frame = 0
         self.animationspeed = 0.2  # in seconds

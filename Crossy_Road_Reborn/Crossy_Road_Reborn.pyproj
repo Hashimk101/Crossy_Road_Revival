@@ -31,10 +31,12 @@
     <Compile Include="Ground.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="menu.py" />
     <Compile Include="player.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="scores.py" />
+    <Compile Include="sounds.py" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.12" />
