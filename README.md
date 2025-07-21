@@ -38,7 +38,8 @@ python Crossy_Road_Reborn.py
 
 ## Screenshots
 
-
+![image alt](https://github.com/Hashimk101/Crossy_Road_Revival/blob/main/Screenshot%202025-07-21%20213845.png?raw=true)
+![image alt](https://github.com/Hashimk101/Crossy_Road_Revival/blob/main/Screenshot%202025-07-21%20213930.png?raw=true)
 
 ## License
 
