@@ -151,7 +151,7 @@ while isGameRunning:
             game_music_playing = False
             menu_music_playing = True
             scores_system.addtoFile()
-            scores_system.reset_score
+            scores_system.reset_score()  # Fixed: Added parentheses to actually call the method
 
         sprite_group1.draw(screen)
         sprite_group2.draw(screen)
@@ -196,6 +196,15 @@ while isGameRunning:
         # Update and draw player
         curr_player.update(dt, objects_group1, objects_group2)
         curr_player.draw(screen)
+        
+        # Display current score during gameplay
+        current_score = scores_system.getScore()
+        score_text = font_game.render(f"Score: {current_score}", True, (0, 0, 0))  # Black color
+        score_rect = score_text.get_rect()
+        score_rect.topright = (SCREEN_WIDTH - 20, 20)  # Position in top-right corner
+        
+        # Draw the score text
+        screen.blit(score_text, score_rect)
     
     elif show_highscore:
         # Display high scores screen
