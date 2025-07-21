@@ -118,6 +118,11 @@ while isGameRunning:
                 elif menu.high_scores_rect.collidepoint(event.pos) and not start_play and not show_highscore:
                     show_highscore = True
                     start_play = False  # Make sure game is not running
+                   
+                elif menu.quit_rect.collidepoint(event.pos):
+                    isGameRunning = False
+                    pygame.quit()
+                    sys.exit()
                     
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
