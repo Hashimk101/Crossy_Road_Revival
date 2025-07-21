@@ -1,15 +1,12 @@
-from tkinter import EventType
-from turtle import setup
 import pygame
 import sys
-
-from pygame.display import set_allow_screensaver
 import player
 import Ground
 import Coins
 import scores
 import Game_Clock
 import menu
+import sounds
 
 
 # Screen setup
@@ -48,6 +45,7 @@ def setUpGame():
     global curr_player, ground_rows, road_sprite, tiles_sprite
     global tree_sprite, bush_sprite, sprite_group1, sprite_group2
     global objects_group1, objects_group2, coins, scores_system
+    global sound
 
     curr_player = player.Player()
     ground_rows = Ground.ground_filler()
@@ -66,7 +64,7 @@ def setUpGame():
     coins = Coins.create_coin_sprites(800, 600, 100, 10, y_offset=-500)
 
     scores_system = scores.Scores()
-
+    sound = sounds.Sounds()
 
 
 def draw_grid(surface):
@@ -91,9 +89,13 @@ def get_topmost_coin_y(coin_group):
 # Game loop
 isGameRunning = True
 start_play = False
+show_highscore = False
+menu_music_playing = False
+game_music_playing = False
+setUpGame()
+
 while isGameRunning:
     dt = clock.tick(FPS) / 1000.0  # Delta time in seconds
-    
     
     # Handle events
     for event in pygame.event.get():
@@ -101,15 +103,35 @@ while isGameRunning:
             isGameRunning = False
             pygame.quit()
             sys.exit()
+            
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
-                if menu.play_rect.collidepoint(event.pos) and not start_play:
+                if menu.play_rect.collidepoint(event.pos) and not start_play and not show_highscore:
                     start_play = True
+                    show_highscore = False  # Make sure high scores are hidden
                     setUpGame()
+                    sound.stopMusic()  # Stop menu music
+                    sound.playGame()   # Start game music
+                    menu_music_playing = False
+                    game_music_playing = True
+                    
+                elif menu.high_scores_rect.collidepoint(event.pos) and not start_play and not show_highscore:
+                    show_highscore = True
+                    start_play = False  # Make sure game is not running
+                    
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                start_play = False 
+                if start_play:  # If in game, return to menu
+                    start_play = False 
+                    show_highscore = False
+                    sound.stopMusic()  # Stop game music
+                    sound.playMenu()   # Start menu music
+                    game_music_playing = False
+                    menu_music_playing = True
+                elif show_highscore:  # If viewing high scores, return to menu
+                    show_highscore = False
     
+    # Game logic
     if start_play:
         # Clear screen
         screen.fill(BACKGROUND_COLOR)
@@ -117,6 +139,14 @@ while isGameRunning:
         # check for end game
         if curr_player.y >= SCREEN_HEIGHT:
             start_play = False
+            show_highscore = False  # Reset high score state
+            sound.playGameOver()  # Play game over sound
+            sound.stopMusic()     # Stop game music
+            sound.playMenu()      # Start menu music
+            game_music_playing = False
+            menu_music_playing = True
+            scores_system.addtoFile()
+            scores_system.reset_score
 
         sprite_group1.draw(screen)
         sprite_group2.draw(screen)
@@ -133,12 +163,11 @@ while isGameRunning:
         coins.draw(screen)
         Coins.move_ground(coins, dt, MOVESPEED)
 
-        # print(f"score: {scores_system.getScore()}")
         # check collision between player and coins
         if Coins.checkCollisionWithPlayer(curr_player, coins):
-            scores_system.add_score(5)
+            scores_system.add_score(5) # add 5 score for coins
+            sound.playCoinCollect()  # Play coin collection sound
         scores_system.add_constant_score(dt)
-    
     
         # Check if topmost coin has moved below screen and recreate coins if needed
         topmost_coin_y = get_topmost_coin_y(coins)
@@ -163,8 +192,18 @@ while isGameRunning:
         curr_player.update(dt, objects_group1, objects_group2)
         curr_player.draw(screen)
     
+    elif show_highscore:
+        # Display high scores screen
+        menu.showHighScores(screen, scores_system.readfromfile(), font_game, background_image)
+        
     else:
+        # Show main menu
         menu.showMenu(screen, font_game, background_image)
+        # Only play menu music if it's not already playing
+        if not menu_music_playing:
+            sound.playMenu()
+            menu_music_playing = True
+            
     # Update display
     pygame.display.flip()
 

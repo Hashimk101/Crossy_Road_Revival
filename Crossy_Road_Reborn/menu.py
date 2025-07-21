@@ -38,6 +38,59 @@ class Menu:
         screen.blit(self.quit_text, self.quit_rect)
 
     
+    def showHighScores(self, screen, top_10, font, bg_image):
+        """Display the top 10 high scores on the screen"""
+    
+        # Colors
+        TITLE_COLOR = (255, 255, 255)
+        SCORE_COLOR = (255, 215, 0)  # Gold color
+        RANK_COLOR = (200, 200, 200)  # Light gray
+        OVERLAY_COLOR = (0, 0, 0, 180)  # Semi-transparent black overlay
+    
+        # Draw background image
+        screen.blit(bg_image, (0, 0))
+    
+        # Create semi-transparent overlay for better text readability
+        overlay = pygame.Surface((screen.get_width(), screen.get_height()))
+        overlay.set_alpha(180)
+        overlay.fill((0, 0, 0))
+        screen.blit(overlay, (0, 0))
+    
+        # Title
+        title_text = font.render("HIGH SCORES", True, TITLE_COLOR)
+        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 80))
+        screen.blit(title_text, title_rect)
+    
+        # Display scores
+        start_y = 150
+        line_height = 45
+    
+        for i, score in enumerate(top_10[:10]):  # Ensure we only show top 10
+            rank = i + 1
+        
+            # Set all ranks to gold color
+            rank_color = (255, 215, 0)  # Gold
+            score_color = (255, 215, 0)  # Gold
+        
+            # Render rank and score
+            y_pos = start_y + (i * line_height)
+        
+            # Rank number
+            rank_text = font.render(f"{rank}.", True, rank_color)
+            rank_rect = rank_text.get_rect(right=screen.get_width() // 2 - 50, centery=y_pos)
+            screen.blit(rank_text, rank_rect)
+        
+            # Score value
+            score_text = font.render(f"{score:,}", True, score_color)  # Format with commas
+            score_rect = score_text.get_rect(left=screen.get_width() // 2 + 50, centery=y_pos)
+            screen.blit(score_text, score_rect)
+    
+        # Instructions
+        instruction_text = pygame.font.Font(None, 32).render("Press ESC to return to menu", True, (255, 255, 255))
+        instruction_rect = instruction_text.get_rect(center=(screen.get_width() // 2, screen.get_height() - 50))
+        screen.blit(instruction_text, instruction_rect)
+
+
 
 
 
